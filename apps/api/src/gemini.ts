@@ -9,7 +9,9 @@ const responseSchema = z.object({
   promptFeedback: z.object({ blockReason: z.string().optional() }).optional(),
   candidates: z.array(z.object({
     finishReason: z.literal('STOP'),
-    content: z.object({ parts: z.array(z.object({ text: z.string().min(1), thought: z.boolean().optional() }).strict()).min(1).max(8) }),
+    // Newer models attach an opaque thoughtSignature to parts. It is accepted but never read,
+    // shown or trusted; any other unexpected field (e.g. functionCall) is still rejected.
+    content: z.object({ parts: z.array(z.object({ text: z.string().min(1), thought: z.boolean().optional(), thoughtSignature: z.string().max(65_536).optional() }).strict()).min(1).max(8) }),
     safetyRatings: z.array(z.object({ blocked: z.boolean().optional() })).optional(),
   })).length(1),
 });

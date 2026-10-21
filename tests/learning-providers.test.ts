@@ -161,6 +161,15 @@ test('Gemini rejects blocked, truncated, malformed, foreign-evidence, duplicate 
   for (const value of values) await assert.rejects(() => gemini(async () => Response.json(value)).explain('Explain', context()), { code: 'UNAVAILABLE' });
 });
 
+test('Gemini accepts the opaque thoughtSignature newer models attach, without exposing it', async () => {
+  const signed = { candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify(reply()), thoughtSignature: 'opaque-signature' }] } }] };
+  const result = await gemini(async () => Response.json(signed)).explain('Explain', context());
+  assert.deepEqual(result, reply());
+  assert.doesNotMatch(JSON.stringify(result), /opaque-signature/);
+  const thinking = { candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify(reply()), thought: true, thoughtSignature: 'opaque-signature' }] } }] };
+  await assert.rejects(() => gemini(async () => Response.json(thinking)).explain('Explain', context()), { code: 'UNAVAILABLE' });
+});
+
 test('Inworld uses Basic credentials without re-encoding, explicit model/voice and non-streaming Base64 MP3', async () => {
   const adapter = inworld(async (input, init) => {
     assert.equal(String(input), 'https://api.inworld.ai/tts/v1/voice');
