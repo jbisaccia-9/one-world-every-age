@@ -26,7 +26,7 @@ printf '%s\n' "Your Full Name" "your.personal@email.com" "YourEmployer" > .guard
 
 - **Never push straight to `main`.** Branch, push, open a PR.
 - **Branch names:** `feat/<thing>`, `fix/<thing>`, `chore/<thing>`, for example `feat/age-gated-chat` or `fix/persona-switch`.
-- **1 approval per PR** from a teammate. Joseph and Harsh can override and self-merge when the clock demands it (say so in the PR).
+- **1 approval per PR** from a teammate, plus a green `guard` check. GitHub enforces both on `main`. Only the repo owner can override and self-merge, and only when the clock demands it (say so in the PR).
 - **Squash and merge only.** One PR becomes one commit on `main`, and the branch is deleted automatically.
 - Keep PRs small. Several small, working PRs beat one big one at 4:15 PM.
 
