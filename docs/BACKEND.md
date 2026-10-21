@@ -318,3 +318,32 @@ New optional environment names: `KID_PURCHASE_MAPPING_CONFIRMED`, `MODULATE_RETE
 Private SDK installation/typecheck/build passed after the archive was supplied. Its bundled docs only name `/client/claim` and token lifetime; they do not specify the server exchange. `/api/kid/claim` therefore stays explicitly `redeemed:false`. No SDK installation, frontend widget pass, requirements GET or standalone Gemini/TTS diagnostic constitutes application approval.
 
 Final current verification: **84 passing tests**, typecheck, complete workspace build, 11-asset browser boundary check and actual built companion/unpacked-extension smoke passed. Real SDK installation/typecheck/optional build passed. The separate real synthetic/provider diagnostics are recorded in DEMO.md and `docs/verification/provider-connectivity-2026-10-21.jsonl`; they do not verify application authorization. Final team fetch remained `17d69b8f361fafad9d307258ce39110067c85ee3`.
+
+
+## Final two-persona increment (2026-10-21)
+
+The server-owned CDK adult flow was tested against the configured Test Mode secret key: active session, `LEGAL_ADULT`, and enabled `ai-chat`, `ai-voice-mode`, `in-game-purchases`. Official AI permission documentation confirms the coaching mapping to `ai-chat`. A genuine owned P10 question passed through `withAuthorizedOperation`, refresh/assertCurrent and Gemini using the preserved model. The fixed fictional question was Susan’s late-fee concern; the validated response advised independently checking the usual toll app, saved official address or genuine statement number. This is actual application text coaching, not browser claim redemption or voice verification.
+
+Gemini returned documented opaque `thoughtSignature` metadata on its answer part. The adapter now accepts bounded signature metadata and discards it; thought parts, tool calls, foreign evidence, mismatched captions and unsafe output still fail. A simulated regression covers the metadata without exposing it. See [Google’s response metadata contract](https://ai.google.dev/gemini-api/docs/generate-content/thought-signatures).
+
+The approved five-permission declaration through installed SDK 0.1.0 returned **403 Unauthorized**. No test-product setting changed. Actual media-upload/generation grants remain absent; the voice boundary continues to reject the turn before microphone access. User-confirmed Modulate retention and verified Inworld IDs can be supplied per process without editing the preserved environment. The current demo runner explicitly supplies `KID_AI_MAPPING_CONFIRMED`, `MODULATE_RETENTION_CONFIRMED`, `INWORLD_MODEL_ID`, `INWORLD_VOICE_ID`; flags do not add missing provider grants. SDK claim redemption and parent approval remain separate unresolved contracts.
+
+### Authenticated sample budget routes
+
+All routes require an application bearer. Ownership is derived server-side; request bodies reject prices, quantities, owners, approval and policy fields. Sample state cannot authorize or complete provider purchases.
+
+| Route | Body | Result |
+| --- | --- | --- |
+| `GET /api/family-budget` | None | Exact `familyBudgetSnapshotSchema`, UTC month, spending, reservations and catalog |
+| `POST /api/family-budget/requests` | `contextVersion`, owned `assessmentId`, server `itemId`, stable `idempotencyKey` | `{purchase,snapshot}`; scam and provider-test requests blocked, zero dispatches |
+| `POST /api/family-budget/requests/:id/cancel` | `contextVersion` | Owner-only local cancellation |
+| `POST /api/family-budget/requests/:id/simulate` | `contextVersion`, `outcome: completed/failed/expired` | Local simulation only; expiry requires the server deadline, not caller time |
+| `POST /api/family-budget/reset` | `contextVersion` | Local sample reset; pending cancelled, receipts retained; provider-test forbidden |
+
+Example request after creating a local-demo session and owned P01 assessment: `{"contextVersion":1,"assessmentId":"<owned-assessment-id>","itemId":"family-wallet-four","idempotencyKey":"rehearsal-1"}`. Use the actual returned context version. Four wallets reserve 4 × 1099 = 4396 minor units; five wallets cost 5495 and exceed the 5000 per-purchase limit. Five four-wallet reservations consume 21980 of the 25000 monthly sample limit; a sixth is denied. The scam `verification-pack` is always denied at 100.
+
+SQLite `BEGIN IMMEDIATE`, unique owner/request keys and terminal state checks enforce atomic reservations and retries. Pending reservations expire after 15 minutes or the UTC month boundary, whichever comes first. Completed simulations count once; failure/cancellation/expiry release allowance. Reset archives the local generation and retains receipts, so old keys cannot revive spending. The default server keeps this sample store in memory; file-backed multi-process concurrency is separately tested. All outcomes remain `paid:false`, `fulfilled:false`, `checkoutCalls:0`, `chargeCalls:0`.
+
+Catalog prices mirror read-only FastSpring metadata checked on this date: `ozone-layer-family-wallet` USD10.99 and `spark-coins-100` USD0.99, with server-fixed sample cart quantities. This does not confirm billing mode or activate checkout. Real W14 child purchases remain blocked pending verified parent linkage, Transactions/Purchase Controls, approval and saved-method contracts.
+
+`purchase-callbacks.ts` prepares bounded raw-body, constant-time FastSpring Base64 and k-ID timestamped hex HMAC verification. Tests cover signatures, modified bytes, duplicate headers and replay-window policy. There is deliberately no callback route or fulfillment side effect until server-owned request/order correlation, durable order/resource deduplication and genuine approval/payment prerequisites are implemented. A valid signature alone is not a completed payment. Remaining secrets: `KID_WEBHOOK_SECRET`, `FASTSPRING_WEBHOOK_SECRET`; remaining checkout configuration: `FASTSPRING_CHECKOUT_PATH`, `FASTSPRING_PRODUCT_PATH`, `FASTSPRING_SANDBOX_CONFIRMED`.

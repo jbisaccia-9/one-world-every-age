@@ -71,6 +71,18 @@ try {
     await page.getByTestId('teaching-feedback').filter({ hasText: 'That observation fits the lesson.' }).waitFor();
     assert.match(await page.getByTestId('teaching-feedback').textContent(), /No mastery credit was awarded/);
   }
+  await page.getByText('Developer diagnostics and permission checks', { exact: true }).click();
+  // Actual authenticated sample routes: reserve once, cancel, block the scam.
+  await page.getByRole('button', { name: 'Open Jimmy’s sample budget' }).click();
+  await page.getByTestId('family-budget-totals').waitFor();
+  await page.getByRole('button', { name: 'Request sample reservation' }).click();
+  await page.getByTestId('family-budget-result').filter({ hasText: 'Sample reservation allowed' }).waitFor();
+  assert.match(await page.getByTestId('family-budget-totals').textContent(), /\$43\.96/);
+  await page.getByRole('button', { name: 'Cancel reservation' }).click();
+  await page.getByTestId('family-budget-result').filter({ hasText: 'cancelled' }).waitFor();
+  await page.getByLabel('Choose a sample catalog item').selectOption('verification-pack');
+  await page.getByRole('button', { name: 'Check the verification-pack offer' }).click();
+  await page.getByTestId('family-budget-result').filter({ hasText: 'blocked' }).waitFor();
   await page.getByRole('button', { name: 'Try restricted demo purchase' }).click();
   await page.getByTestId('purchase-result').filter({ hasText: 'Checkout calls: 0. Charge calls: 0.' }).waitFor();
   await page.getByRole('button', { name: 'Susan · Toll email' }).click();
@@ -78,6 +90,7 @@ try {
   await page.getByLabel('Example variant').selectOption('baseline');
   await page.getByText('Do not pay through this email.', { exact: false }).waitFor();
   assert.match(await page.locator('.evidence').textContent(), /toll-notice.example/);
+  await page.getByText('Developer diagnostics and permission checks', { exact: true }).evaluate(node => { node.closest('details').open = true; });
   await page.getByRole('button', { name: 'Demonstrate consent withdrawal' }).click();
   await page.getByTestId('consent-result').filter({ hasText: 'The old assessment was rejected.' }).waitFor();
   const storage = await page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage) }));
@@ -108,13 +121,14 @@ try {
   assert.equal(await page.getByRole('radio').first().isChecked(), false);
   // Simulated ready response exercises UI microphone denial without granting
   // backend/vendor authorization or making any provider request.
+  await page.getByText('Developer test setup', { exact: true }).click();
   await page.getByLabel('I am a consenting adult presenter.', { exact: false }).check();
   await page.getByRole('button', { name: 'Start server-owned provider test' }).click();
   await page.getByLabel('Fictional text question').waitFor();
   await page.evaluate(() => { window.__microphoneCalls = 0; navigator.mediaDevices.getUserMedia = async () => { window.__microphoneCalls++; throw new DOMException('Synthetic denial', 'NotAllowedError'); }; });
   assert.equal(await page.evaluate(() => window.__microphoneCalls), 0);
   await page.route('**/api/voice/turns', route => route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ turnId: '11111111-1111-4111-8111-111111111111', contextVersion: 1, stage: 'ready' }) }));
-  await page.getByRole('button', { name: 'Talk', exact: true }).click();
+  await page.getByRole('button', { name: 'Talk it through', exact: true }).click();
   await page.getByTestId('provider-message').filter({ hasText: 'Microphone access denied.' }).waitFor();
   assert.equal(await page.evaluate(() => window.__microphoneCalls), 1);
   await page.getByRole('button', { name: 'Stop', exact: true }).click();
@@ -134,6 +148,11 @@ try {
   await fixturePage.evaluate(contentArtifact);
   assert.equal(await fixturePage.evaluate(() => globalThis.__beaconFixtureResult?.fixtureId), 'P01', 'Built content must expose the bounded result even inside Vite’s wrapper');
   assert.match(await fixturePage.locator('#beacon-foundation-notice section').textContent(), /Concern in controlled fixture/);
+  const beforeRiskyClick = fixturePage.url();
+  await fixturePage.getByRole('link', { name: 'Open verification-pack link' }).click();
+  await fixturePage.getByRole('dialog').waitFor();
+  assert.equal(fixturePage.url(), beforeRiskyClick, 'Warning must precede fixture link navigation');
+  await fixturePage.getByRole('button', { name: 'Stay on this page' }).click();
   await fixturePage.evaluate(contentArtifact);
   assert.equal(await fixturePage.locator('#beacon-foundation-notice').count(), 1);
   await fixturePage.getByRole('button', { name: 'Dismiss', exact: true }).click();

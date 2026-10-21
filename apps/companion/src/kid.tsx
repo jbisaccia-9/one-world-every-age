@@ -8,7 +8,7 @@ export function KidRoot({ children }: { children: ReactNode }) {
   const [opened, setOpened] = useState(false);
   return <>
     <aside className="widget-status" aria-label="k-ID integration status">
-      <p>k-ID application authorization is unverified. Offline fixture practice remains available.</p>
+      <p>Browser-widget claim redemption is unverified. Offline fixture practice remains available; the separate server-owned CDK test checks its own permissions.</p>
       {__KID_WIDGET_ENABLED__ ? <>
         <p>The optional test widget can contact k-ID and declare product settings. Its result does not authorize this application.</p>
         <button onClick={() => setOpened(!opened)}>{opened ? 'Return to offline demo' : 'Open k-ID test widget'}</button>

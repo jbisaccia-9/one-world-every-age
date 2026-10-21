@@ -1,38 +1,55 @@
 # Ozone Layer demo runbook
 
-This is a reviewable **local integration**, not team main or a published extension. The offline safety/learning scenes work together. Full vendor-authorized voice, browser claim redemption and W14 parent-approved saved-method purchases remain blocked. Connectivity diagnostics are separate from application authorization.
+The current local demo presents fictional Jimmy, 11, and Susan, 68, with controlled evidence, text teaching and a separate sample family budget. Full vendor-authorized voice, browser claim redemption and real parent-approved saved-method purchases remain blocked. Connectivity diagnostics do not establish application authorization.
 
-## Included work and coordination
+## Current integration
 
-- Branch: `feat/ozone-demo`; directory: the sibling `one-world-every-age-integration` checkout.
-- Preserved integration base: `7a25034c1816e404796602c087e23493d1282a82`.
-- Preserved original backend HEAD: `652a1f32a7568109e6bbf4ded360b36c37ff4e88`; its 22 uncommitted source/document files were previously checkpointed as `11d381dbd6b52e7a3278162cb899edef25289270` and are included through the integration base. The original working tree was not rewritten.
-- Recorded team main: `17d69b8f361fafad9d307258ce39110067c85ee3`. PRs #5/#6 are merged. Its tree equals the already included PR #6 tree `d428f5a34bbf0ea04045797851430c521e9789ce`; squash ancestry was reconciled at `d8ae174d3b4514ca9168b1241acff75da94c12fc`, preserving the reviewed W02 and optional-widget corrections.
-- Fork main: `97675eceedd2c3f722751fd5e81fb5f34106055a`; it is not the integration source of truth.
-- Shared review: **Harsh + Joseph** own the additive contracts, HTTP routes, handoff and widget/session boundary. **Angela + Joseph** review voice capture, captions and the reused Gemini/Inworld adapters. **Harsh + Joseph**, coordinated by Angela, retain the W14 purchase plan below. No new competing provider/session service was introduced.
-- GitHub lists no open PRs at the integration snapshot. Posting the coordination handoff to PR #6 was attempted, but the connector returned `403 Resource not accessible by integration`. No comment was posted; share this local runbook with Joseph/Angela before parallel changes to these shared files. No teammate acknowledgement is claimed.
+Branch `feat/ozone-demo` includes team main `8daeb8cc92a9c06520928a8b38080be72a60e116` through merge `2274e7317c98a0db2ca4de017f29b4e679ab6156`. Earlier W02/backend work, the local teaching/provider increment and the real optional SDK integration are preserved. The original checkout and private environment file remain separate; no credentials or SDK archive belong in Git.
+
+Harsh and Joseph review shared contracts, extension handoff, permissions and purchases. Angela and Joseph review voice capture, captions and the existing Modulate/Gemini/Inworld adapters. This is a local integration, not a deployment or extension publication.
 
 ## Start the offline demo
 
-From the original checkout:
+Open the running companion at **http://127.0.0.1:5173**; API health is **http://127.0.0.1:8787/health**. To start from this checkout with Node 22 LTS (verified 22.20.0) and npm 10/11:
 
 ```bash
-cd ../one-world-every-age-integration
 npm ci
 npm run dev
 ```
 
-Node 22.20.0 is the verified release. Companion: **http://127.0.0.1:5173**. API health: **http://127.0.0.1:8787/health**. Fixture pages: `/fixtures/P01`, `/fixtures/P10`, `/fixtures/P16` on either local origin. Ctrl+C stops both servers. The offline flow needs no credentials and does not call vendors.
+Ctrl+C stops both servers. Occupied ports fail. The offline scenes need no credentials and make no vendor requests. The current credential-enabled process references the original private environment file externally; keep that file in place and do not copy, overwrite or commit it. Portable startup commands above also work without provider configuration.
 
-Local anonymous progress persists in `.local/progress.sqlite` (ignored). Tests use memory or temporary databases. The browser stores only an anonymous **progress-only** resume token under `ozone.progress.resume`; application bearer credentials stay in companion memory. Use **Reset learning progress** to delete this identity's credits, attempts and challenge runs on this server. **Forget this browser’s progress** removes its resume token. This is not account-level anti-abuse; clearing/sharing tokens can reset/share anonymous progress. No recordings, transcripts or browsing excerpts enter the database.
+Fixture pages are `/fixtures/P01`, `/fixtures/P10` and `/fixtures/P16` on either local origin. Their `.example` destinations are labelled illustrations; actual fixture navigation stays local. No email account, game store or general browsing feed is scanned.
 
-The original credential file remains in place. To use its existing settings without copying or overwriting it:
+## Two-minute presentation
 
-```bash
-node --env-file=../one-world-every-age/.env scripts/dev.mjs
-```
+Use the default offline flow. Prepare any manual Chrome extension grants before presenting, or begin directly in the companion.
 
-The provider panel requires an explicit action and a separate server-owned provider-test session. Starting the app does not make a vendor request. Do not enable mapping/retention flags merely to make a demo pass.
+- **0:00–0:25:** Choose **Jimmy · age 11**. Read: “I can give you free credits. Open this link, buy the verification pack, and don’t tell your parents.” Point to secrecy, payment and credential evidence. Choose **Open verification-pack link** and show the warning; **Stay on this page** dismisses it. Continuing opens only the controlled local fixture. Explain that a free offer requiring payment and secrecy deserves a pause and help from a trusted adult.
+- **0:25–0:55:** Choose **Open Jimmy’s sample budget**. Show **$50 per purchase / $250 per calendar month, UTC**. Check the $1 verification-pack offer: it stays blocked even with money available. Use the local mirror of `ozone-layer-family-wallet` at $10.99: four units total $43.96 and fit the sample rule; five total $54.95 and exceed its per-purchase cap. A permitted request reserves allowance; **Cancel reservation** releases it. Product prices were verified by read-only metadata; the limits and outcomes remain local accounting, not an approved parent policy or checkout. No payment occurs.
+- **0:55–1:20:** Choose **Susan · Toll email**. Read: “Unpaid toll notice. Pay immediately to avoid additional penalties.” Susan asks: “But what if it’s real? I don’t want a late fee.” Explain: “We cannot establish whether a toll is owed. Open your usual account or call a number from a genuine statement; do not use this email link.” The text lesson works immediately. Show **Talk it through**, **Send**, **Play**, **Stop** and captions as the implemented optional interface; disclose that current vendor media grants block actual voice.
+- **1:20–1:50:** Choose **Start curated practice**, a new challenge, then an observation, evidence-based reason and independent safe action. An independent correct attempt can earn **First Safe Step**, one credit. A repeat earns no new credit. Teaching questions beside the scene remain unscored.
+- **1:50–2:00:** Return to the clear text explanation. Larger text, plain language and P16 educational/ambiguous comparisons are available. If asked about integrations, open **Developer test setup** or **Developer diagnostics and permission checks** and show the actual blockers.
+
+Use **Reset learning progress** before rehearsing if a first badge is needed. Do not reveal an answer before an independent attempt. **Reset demo** resets scene controls and preferences while preserving learning and sample budgets.
+
+## Sample family accounting
+
+**Open Jimmy’s sample budget** creates a separate owned local-demo session. Prices and the fixed $50/$250 policy come from the server. Transactions atomically reserve the available UTC calendar-month balance, including existing pending reservations. Idempotent retries reuse the original result; different payloads cannot reuse its key. Completion spends the reservation once. Cancellation, failure and expiry release it; expiry occurs after 15 minutes or at the next UTC month boundary, whichever comes first. Terminal receipts cannot be revived. Five $43.96 reservations use $219.80 and leave $30.20; a sixth $43.96 reservation is denied by the monthly limit, even though each request fits the $50 cap.
+
+Under **Simulate an outcome**, completion/failure affect sample accounting only. The legitimate ledger entries are labelled **Sample cart** and mirror read-only metadata checked on 2026-10-21 for `ozone-layer-family-wallet` (USD 10.99) and `spark-coins-100` (USD 0.99); server-fixed quantities provide the $43.96 four-unit and $54.95 five-unit examples. This local mirror creates no vendor checkout and does not establish product billing mode, saved-payment support or parental approval. The fictional scam verification pack is a separate example, blocked before budget eligibility even at $1. Provider-mode family requests remain blocked while parent linkage, policy and approval are unverified. Zero checkout, charge or entitlement calls are made by this sample flow.
+
+**Reset this sample budget** cancels pending reservations and starts a fresh local accounting view while retaining owner-bound receipts against replay. It preserves learning progress and other sessions. Sample ledger state is held in the API process’s in-memory SQLite store; it is not a verified parent wallet.
+
+## Voice controls and cancellation
+
+The presenter interface keeps Susan’s exact question visible and prefilled in **Fictional text question**. **Ask using text** uses the existing protected coaching route. Provider errors remain visible; the offline explanation above stays available throughout.
+
+To inspect setup, open **Developer test setup**, explicitly opt in as a consenting adult presenter, then choose **Start server-owned provider test**. A genuine pending challenge link is shown only if returned by the server. **Refresh provider permissions** uses that session’s current version. The optional browser widget is a separate system and cannot approve these server operations.
+
+**Talk it through** checks server eligibility before requesting browser microphone access. Capture is bounded to 15 seconds / 2 MiB. **Send** stops capture and submits to Modulate redaction → existing Gemini reasoning → optional Inworld speech. Recording, microphone-wait, processing and playback states are visible. Captions contain the validated spoken text. Speech-only failure preserves captions; autoplay denial preserves transient audio for explicit **Play** and replay. **Stop**, new work, consent withdrawal and navigation stop the microphone/player, revoke audio URLs and discard late work. No background listening or emotion detection is implemented.
+
+Current application voice is blocked by missing media grants and configuration. Browser lifecycle checks used explicitly simulated media and provider responses; no recording or vendor authorization was fabricated. Full live capture/redaction/playback remains unverified.
 
 ## Build and load the extension
 
@@ -40,73 +57,35 @@ The provider panel requires an explicit action and a separate server-owned provi
 npm run build
 ```
 
-In Chrome, open `chrome://extensions`, enable **Developer mode**, select **Load unpacked**, and choose this integration checkout's **`apps/extension/dist`**. Reload it after every rebuild.
+In Chrome, open `chrome://extensions`, enable **Developer mode**, select **Load unpacked**, and choose **`apps/extension/dist`**. Reload after rebuilding.
 
-1. Open `http://127.0.0.1:8787/fixtures/P01` and invoke Ozone Layer from the toolbar.
-2. Select **Show current-page access**. The built content script recognizes only exact, visible controlled P01/P10/P16 fixture text and destination metadata on loopback fixture URLs. It highlights the destination and shows evidence, uncertainty and a safe next action. P16 remains a comparison without a keyword-based fraud accusation. Hidden/editable/form content is excluded. General browsing detection and automatic monitoring are unavailable.
-3. For the owned handoff, copy the nonsecret **extension origin** from the popup's **Local connection** details. Restart the app with that exact origin, without changing the credential file:
+1. Open **http://127.0.0.1:8787/fixtures/P01**, invoke Ozone Layer from the actual toolbar and choose **Show current-page access**. Repeat for P10 and P16. The extension recognizes exact visible fixture text and destination metadata on loopback URLs; hidden/editable/form content is excluded. P16 remains a contextual comparison.
+2. For the owned handoff, copy the popup’s nonsecret extension origin from **Local connection** into the server’s comma-separated `BEACON_EXTENSION_ORIGINS` setting, then restart the API. `BEACON_COMPANION_ORIGIN` defaults to `http://127.0.0.1:5173` and is baked into the extension; rebuild if changing it. CORS allowlisting grants no application permission.
+3. Choose **Open owned fixture lesson** and allow access to the local companion origin when Chrome asks. The worker holds its application bearer in `chrome.storage.session`. A one-use, 45-second ticket opens the companion, removes the URL fragment and redeems a new assessment owned by the companion’s separate session. It transfers only fixture selection, not a bearer, excerpts or provider grants. Used, expired, signed-out and stale-context references are rejected.
+4. Without local access/CORS setup, the on-page explanation and **Open companion demo** remain available. No required host permissions or automatic content scripts were added.
 
-```bash
-BEACON_EXTENSION_ORIGINS=chrome-extension://<actual-extension-id> npm run dev
-# Or reference the existing credential file in place:
-BEACON_EXTENSION_ORIGINS=chrome-extension://<actual-extension-id> node --env-file=../one-world-every-age/.env scripts/dev.mjs
-```
+Automation loads the actual unpacked extension and exercises its worker, popup, restricted-page rejection, built content recognition/dismissal and HTTP lesson handoff. The positive toolbar/`activeTab` grant and optional host-permission prompt still require these manual steps; scripted content execution does not prove Chrome granted access. General browsing detection and automatic monitoring are unavailable.
 
-4. Check the fixture again, choose **Open owned fixture lesson**, and grant access to the local companion origin when Chrome asks. The extension creates a local-demo session and owned assessment. Its worker retains the bearer only in `chrome.storage.session` to survive worker suspension. A one-time 45-second fixture ticket opens the companion; the fragment is removed immediately and redeemed into a **new assessment owned by the companion session**. The ticket transfers fixture selection, not provider permissions. It contains no excerpts or application bearer. Used, expired, signed-out or stale-context source references cannot redeem.
-5. If the connection grant/CORS setup is missing, the on-page explanation still works and **Open companion demo** remains available. Allowlisting is not authorization. No required host permissions or automatic content scripts were added.
+## Provider evidence and current blockers
 
-Browser automation loaded the actual unpacked extension and exercised its worker/popup and restricted-page rejection. It also executed the actual built content artifact on P01/P10/P16 and exercised HTTP handoff through the actual companion. **The positive toolbar/activeTab grant and optional host-permission prompt still need the manual steps above**; scripted content execution is not evidence that Chrome granted activeTab.
+The earlier sanitized [connectivity record](verification/provider-connectivity-2026-10-21.jsonl) remains historical evidence. The current checks below supersede its earlier unknown session/retention entries. No credentials, audio or response transcripts are committed.
 
-## What works together
-
-| Feature | Current combined behavior | Verification / limit |
+| Provider | Observed result | Application consequence |
 | --- | --- | --- |
-| Child scene | Fictional child, 11; P01 evidence, parsed illustrative destination, simple explanation, trusted-adult/independent-app advice | Browser and regression tests. No real child's data or vendor age approval |
-| Susan scene | Fictional Susan, 68; P10 toll deadline + payment request + highlighted destination, uncertainty about any debt, independent account/statement advice | Browser and deterministic tests. No actual email access or bill verification |
-| P01/P16 teaching | Owned assessment → scripted explanation → short quiz → server-checked feedback | Existing regressions retained, including all personas/variants, ownership and stale-context rejection; teaching earns no mastery credit |
-| Curated learning | Nine distinct curated scenarios; observation + reason + action required; server-only rubrics | SQLite transactions, owner/progress identity + stable credit-key uniqueness and idempotency keys; first independent correct answer only |
-| Badges/status | Exact spec 10 thresholds, including First Safe Step, financial/privacy/claim/careful judgments and category-spanning Safety Guide | Replay/concurrency cannot duplicate credit. Reveals and any feedback make later attempts practice-only. No purchases or live flags award credit |
-| Consent transition | Explicit offline cloud opt-in on → off; version changes and old assessment is rejected | Actual browser/server test. This is accurately labelled user consent withdrawal, **not** a real jurisdiction comparison or k-ID approval change |
-| Provider onboarding | Separate explicit CDK Test Mode start/refresh bound to an application bearer; pending genuine challenge link if returned | Owned routes implemented; live active-session/product mapping not verified. CDK presets remain 8/15/34; fictional scene ages 11/68 do not assert vendor age verification |
-| Voice | Talk checks server eligibility before microphone; bounded capture → Modulate redaction → existing Gemini → existing Inworld, exact captions; Stop/navigation cancel and discard late output | Automated simulated HTTP pipeline, permission, failure and cancellation tests. Browser Talk/no-auto-listening/mic-denial/Stop tested with an explicitly simulated ready response. Full live voice remains blocked |
-| Purchase denial | Only server catalog item `ozone-theme`, USD 1.00. Local/child contexts are blocked with zero checkout and zero charge calls | Backend, HTTP and actual browser checks; no interception of another game's payment forms |
-| Eligible adult checkout | Documented FastSpring Sessions v2 adapter always sends `live:false`, validates own product/total/returned host/test state, reserves idempotency before dispatch | Simulated response tests only. Requires genuine bound adult/purchase grant + confirmed mapping + configured sandbox catalog; no live checkout/order/payment demonstrated |
+| k-ID CDK | A real adult Test Mode session was **active** and returned only `ai-chat`, `ai-voice-mode`, `in-game-purchases`. | Missing `ai-media-upload` and `ai-media-generation` deny voice. These grants do not establish parent linkage, media entitlement or the browser claim exchange. CDK presets are 8/15/34; fictional scene ages 11/68 are not vendor age claims. |
+| Private SDK | Installed `@k-id/core` 0.1.0 attempted the user-approved five-permission declaration and returned **403 Unauthorized**. No vendor settings changed. | Declaration did not establish the missing media grants. Memory permission is excluded. The browser SDK and server CDK remain separate. |
+| Gemini | Prior fixed-fictional-text diagnostic verified the existing working model and structured/evidence parsing. | Existing key/model configuration is preserved. Genuine owned CDK adult P10 Gemini text coaching passed after fixing documented signature metadata. The actual companion rendered its captions; voice remained denied before any microphone request. |
+| Inworld | Earlier real synthetic MP3 synthesis succeeded with `inworld-tts-2` and system voice `Aanya`. | `INWORLD_MODEL_ID` / `INWORLD_VOICE_ID` are missing from the preserved root environment. Those diagnostic selections were not written there. Live application audio/caption alignment remains unverified. |
+| Modulate | Earlier synthetic Inworld clip passed multipart batch redaction; no transcript was sent to Gemini. The user has now confirmed retention. | `MODULATE_RETENTION_CONFIRMED` remains absent from the preserved root environment. An explicit per-process setting may be used after required vendor grants are established. The short diagnostic does not establish redaction accuracy. |
+| FastSpring | Read-only catalog and per-product metadata returned `ozone-layer-family-wallet` at USD 10.99 and `spark-coins-100` at USD 0.99 (HTTP 200). No actual checkout or charge occurred. | Billing mode, checkout mapping, saved-method APIs, verified parent approval and order completion remain unresolved. The local ledger mirrors metadata only; it cannot authorize provider purchases. |
 
-Curated badges: First Safe Step = one credit; Scam Pattern Spotter = three distinct financial scenarios; Privacy Protector = two privacy scenarios; Evidence Explorer = two claim scenarios including insufficient evidence; Careful Thinker = two legitimate/ambiguous scenarios. Explorer starts at zero, Learner at three, Safety Guide at six spanning three categories. Progress is learning, not certification.
+Do not infer media approval from `ai-voice-mode` alone, fabricate grants, or flip mapping settings merely to pass a demo. Inworld model/voice and confirmed Modulate retention can be supplied to a later local process without modifying the original private environment, The current local process uses the confirmed coaching mapping and these nonsecret provider settings; actual missing media grants still deny voice. Missing or malformed configuration fails closed while offline startup remains available.
 
-## Provider evidence and configuration
-
-Sanitized evidence is in [verification/provider-connectivity-2026-10-21.jsonl](verification/provider-connectivity-2026-10-21.jsonl). No response text, audio or credentials were saved. These **isolated diagnostics** did not construct an authorization context, create an application approval, dispatch the protected coach, or create an order.
-
-| Provider | Real diagnostic | Application configuration / remaining verification |
-| --- | --- | --- |
-| k-ID | Secret-key Test Mode requirements GET: HTTP 200, requirements parsed | `KID_API_KEY`, `KID_WORKFLOW`, `KID_API_BASE` configured. `KID_PRODUCT_ID` missing; `KID_AI_MAPPING_CONFIRMED` unconfirmed; `KID_PURCHASE_MAPPING_CONFIRMED` absent; `KID_WEBHOOK_SECRET` missing. Active session, actual configured product mapping, guardian link and approval remain unverified |
-| Gemini | Historical successful fixed-fictional-text diagnostic preserved; model access and JSON/evidence/caption parsing passed | Existing `GEMINI_API_KEY` and **working `GEMINI_MODEL` preserved**. No repeat live call. Protected application reasoning still awaits genuine k-ID authorization |
-| Inworld | System voices GET and one fixed fictional MP3 synthesis: HTTP 200, canonical audio parsed. Diagnostic used official `inworld-tts-2` and returned system voice `Aanya` | `INWORLD_API_KEY` configured. `INWORLD_MODEL_ID` / `INWORLD_VOICE_ID` missing, so application speech stays **not configured**. Diagnostic selections were not written to configuration. Audible playback/caption alignment in the live application still unverified |
-| Modulate | The in-memory synthetic Inworld clip reached batch redaction: HTTP 200, multipart metadata/audio parsed. No transcript was sent to Gemini | `MODULATE_API_KEY` configured; `MODULATE_RETENTION_CONFIRMED` absent. Application adapter stays **not configured** pending retention/entitlement confirmation. Short diagnostic does not establish PII-redaction accuracy or retention |
-| FastSpring | Basic-auth read-only catalog GET: HTTP 200, response parsed. **Zero checkout/charge calls, no order** | API username/password configured. Existing `FASTSPRING_STOREFRONT` has unsupported test-popup format and was preserved. Confirm `FASTSPRING_CHECKOUT_PATH` (`store/web-checkout` etc.), `FASTSPRING_PRODUCT_PATH` for our USD 1 theme, `FASTSPRING_SANDBOX_CONFIRMED`; webhook secret missing. Actual sandbox checkout/order/webhook not verified |
-
-The successful diagnostic's Inworld selection can be supplied to one local process without writing any credential file:
-
-```bash
-INWORLD_MODEL_ID=inworld-tts-2 INWORLD_VOICE_ID=Aanya node --env-file=../one-world-every-age/.env scripts/dev.mjs
-```
-
-This resolves the missing model/voice settings for that process only. It does not enable k-ID mapping or confirm Modulate retention, so it cannot bypass the remaining application-authorization blockers.
-
-`BEACON_COMPANION_ORIGIN` is configured; `BEACON_EXTENSION_ORIGINS` is missing. All existing `@beacon/*`, BEACON names, IDs and provider settings are preserved. New variable **names**, never values, are in `.env.example`. Malformed/missing provider configuration fails closed without blocking startup.
-
-Only rerun the diagnostic intentionally; it makes one synthetic TTS/redaction request when configured:
-
-```bash
-node --import tsx --env-file=../one-world-every-age/.env scripts/provider-diagnostic.mjs
-```
-
-It bypasses application orchestration solely to test connectivity. It grants no app permission. Test-mode FastSpring uses the same documented API host as other modes, so the implementation explicitly requests and validates `live:false`; the diagnostic uses GET only.
+The FastSpring Sessions adapter sends and validates `live:false` and rechecks authorization for cached checkout URLs. Its positive checkout tests use injected simulated responses. Prepared raw-body signature verifiers cover k-ID and FastSpring callbacks, but no webhook routes, event consumption, business correlation, paid orders or fulfillment are wired to them. A valid signature alone is not approval or proof of payment.
 
 ## Private SDK and claim boundary
 
-The privately supplied `vendor/k-id-core-web.tgz` was found in the original checkout and linked into the integration's ignored vendor directory. It is **not committed**. It is an optional local dependency, so the default offline build remains independent of it. `npm ci` installed `@k-id/core` 0.1.0; SDK typecheck, optional-widget build and browser boundary inspection passed:
+The supplied `vendor/k-id-core-web.tgz` is an ignored optional local dependency. Default `npm ci`, typecheck and offline build work without it. The actual installed SDK is used when available; no stub is substituted. Optional widget typecheck/build commands are:
 
 ```bash
 npx tsc --noEmit -p integrations/kid/tsconfig.json
@@ -114,55 +93,57 @@ BEACON_KID_WIDGET_ENABLED=true npm run build --workspace=@beacon/companion
 npm run check:bundles
 ```
 
-The bundled README documents `onClaim(claimToken)` after a passed **or pending** age check. Bundled `dist/types/fapi-schema.d.ts`, `CheckAgeGateResponse.claimToken`, says the one-time token lasts ten minutes and names `/client/claim`. **There is no server claim path/request/response/authentication definition in the bundled paths, client or README.** Public official docs likewise did not resolve it. Installing the SDK resolves installation, not claim redemption.
+Widget startup requires the existing `VITE_KID_PUBLISHABLE_KEY` and `VITE_KID_SUPPORT_EMAIL`; `VITE_KID_BASE_URL` defaults to the SDK’s Test Mode FAPI host. The reviewed declaration is exactly `ai-chat`, `ai-voice-mode`, `ai-media-upload`, `ai-media-generation`, `in-game-purchases`. The attempted real declaration failed with 403; no permission or setting change is claimed.
 
-Therefore `/api/kid/claim` continues returning `202`, `redeemed:false`. No guessed endpoint or arbitrary browser session ID is promoted to ownership. Harsh/Joseph need the vendor-confirmed server host, auth, request/response, one-time-use behavior and browser-flow-to-current-owner binding/replay rules. Do not replace that gap with `/session/get` on an untrusted caller-supplied UUID.
+The bundled documentation says `onClaim(claimToken)` can follow a passed or pending age check. It names a ten-minute one-time token and `/client/claim` but does not define the required server host/authentication/request/response and current-owner binding. `/api/kid/claim` therefore remains `202`, `redeemed:false`. No guessed endpoint or caller-supplied vendor session UUID becomes application ownership. Harsh/Joseph need the vendor-confirmed exchange, replay and owner-binding contract before enabling it. A widget pass cannot replace this step or authorize W02 operations.
 
-Optional widget startup needs the existing `VITE_KID_PUBLISHABLE_KEY` and `VITE_KID_SUPPORT_EMAIL`; `VITE_KID_BASE_URL` defaults to the SDK's test FAPI host. `BEACON_KID_WIDGET_ENABLED=true` exposes an explicit button. **Opening the widget can declare the reviewed test-product permissions/settings**; it was not opened live and no declaration was made during this integration. Offline access remains outside the gate.
+## Persistence, privacy and reset
 
-## W14 boundary and remaining tasks, in dependency order
+Anonymous curated progress lives in ignored `.local/progress.sqlite`. Only the progress resume token `ozone.progress.resume` is stored in browser local storage; application credentials stay in memory. The optional widget may store its own opaque SDK session/challenge identifiers when enabled. **Reset learning progress** deletes this identity’s credits, attempts and challenge runs; **Forget this browser’s progress** removes its resume token. Clearing/sharing anonymous tokens can reset/share progress; this is not account-level anti-abuse.
 
-The team's current spec 13.1 remains the purchase design. The new optional adult hosted checkout is a limited independent sandbox capability; it does not establish or replace parent-approved saved-method charging. Child policy is **off**. No charge adapter, invented simulated charge, unsigned webhook or fake parental approval is exposed.
+**Reset demo** changes scene controls only. **Reset this sample budget** affects only its owned sample accounting. `npm run demo:reset` prints foundation guidance and deletes nothing from disk; it does not erase learning or budget receipts. No browsing history, recordings, transcripts or coaching memory are persisted. Only an explicitly consenting adult presenter may record a fictional question, processed transiently in memory; never record a child or real player.
 
-1. **Harsh + Joseph, vendor mentor:** resolve the browser claim exchange and owner binding; confirm configured CDK/AI/purchase mappings and genuine active/guardian sessions. Test replay, cross-owner claims and revocation using actual documented contracts. Then verify the existing protected Gemini route. This blocks a full vendor-authorized app demo.
-2. **Angela + Joseph, Harsh:** confirm Modulate retention/redaction access, explicitly configure an available Inworld model/voice, and rehearse permitted adult Talk → redaction → Gemini → audio/captions with synthetic text. Verify real microphone denial, Stop during each live stage, playback permission refresh and redaction quality; do not record children. No automatic listening.
-3. **Joseph + Harsh:** manually grant the real toolbar activeTab/local connection, check P01/P10/P16 notice/dismissal and owned handoff in Chrome, then review shared schema/UI changes together. No general detector or automatic background monitoring claim.
-4. **Harsh + Joseph, coordinated by Angela:** W14 genuine verified parent-child link; adult-admin policy editing (off / approve each / monthly limit, over-limit behavior, notifications); confirmed Transactions/Purchase Controls entitlement; signed, replay-safe purchase approval and FastSpring webhooks; transactional monthly accounting; confirmed saved-method/variable-charge APIs. Pending/denied/expired/disabled approvals must never checkout/charge. Do not silently substitute the adult checkout for this work.
-5. **Harsh + Joseph:** confirm our sandbox checkout/product and test-only catalog price; complete one eligible hosted sandbox checkout with synthetic details and documented test card, verify signed completion and order ownership. Basic protection, lessons and badges remain free. No production payment.
-6. **Joseph / Angela:** real mobile Safari/Android and accessibility rehearsal; optional general manual-text detection, dynamic-page lifecycle and the remaining scenario families follow the first demo. A genuine jurisdiction difference requires real configured provider evidence; the labelled consent transition is available immediately.
+## Remaining integration work
 
-The next three concrete actions are items 1–3. Independent local implementation is complete for the offline scenes, curated learning, handoff, consent transition, voice orchestration/failure handling and sandbox adapter/policy boundary. Live verification and the unresolved W14 prerequisites remain explicitly separate.
-
-## Rehearsed two-minute script
-
-Use the default offline build. Complete the manual extension grant/CORS preparation before presenting, or start directly in the companion and disclose the extension grant is pending.
-
-- **0:00–0:30:** Select **Child · fictional age 11**, P01 baseline, and **Plain language**. Point to the credential request and highlighted actual destination metadata. Say: “This controlled example asks for a password and sign-in code. Keep both private and open the game independently.” The actual tab is loopback; the `.example` address is explicitly illustrative.
-- **0:30–0:45:** Click **Try restricted demo purchase**. Show `blocked_by_policy`, **Checkout calls: 0. Charge calls: 0.** Explain that this is our optional theme catalog; Ozone Layer cannot purchase another game's credits.
-- **0:45–1:10:** Choose **Susan · Toll email**. Point to the deadline, card request and `toll-notice.example`. Explain: “We cannot establish whether a toll is owed. Check your usual account or call a number from a genuine statement; do not follow this email link.” Voice is not secretly playing; show text first. If asked about live voice, show the separate diagnostic evidence and current authorization/configuration blockers.
-- **1:10–1:40:** Click **Start curated practice**, select a new challenge, and choose an observation, evidence-based reason and independent safe action. Submit once: **First Safe Step**, one credit. Submit again: no new credit. This is server-checked learning, not a prize or a claim that the person is safe.
-- **1:40–2:00:** Click **Demonstrate consent withdrawal**. Show the new server context version and rejection of the old assessment. Say: “This is an offline user-consent transition, not a verified country-law difference.” Finish on the provider-status table and disclose the remaining full-flow blockers.
-
-For a fresh rehearsal use **Reset learning progress** before the timer and **Reset demo** for the scene controls. Do not reveal a challenge answer before the independent attempt. Existing teaching quizzes always remain unscored.
+1. **Harsh + Joseph, vendor mentor:** resolve SDK declaration authorization, missing media permissions, actual product mapping and browser claim owner binding; exercise genuine permitted, denied and revoked sessions. Protected CDK adult P10 Gemini text coaching passed; full voice still needs the media grants.
+2. **Angela + Joseph, Harsh:** after vendor grants, apply the explicitly confirmed process configuration, rehearse one adult fictional voice turn, matching captions and Stop at every stage; verify retention/redaction quality and real browser playback.
+3. **Joseph + Harsh:** complete the manual Chrome toolbar/local-host grant and owned handoff checklist; check mobile Safari/Android and accessibility. A genuine jurisdiction comparison still needs actual provider evidence; the labelled offline consent-withdrawal example is separate.
+4. **Harsh + Joseph, Angela:** confirm sandbox checkout mapping, product billing mode and saved-method contracts, verified parent-child linkage, parent policy/approval and replay-safe, correlated signed events. Only then exercise synthetic test checkout/order fulfillment. Parent limits are not implemented by declaring a purchase permission, and the sample budget never authorizes payment. Protection, lessons and badges remain free.
 
 ## Validation record
 
-The final check results and final fetch are appended below after verification. Automated provider fixtures are simulated HTTP, never reported as real vendor connections. The separate real diagnostic is described above. Required checks: `npm run typecheck`, `npm test`, `npm run build`, `npm run check:bundles`, `npm run test:smoke`; optional real-SDK typecheck/build were also run. No main merge, push, deployment, extension publication, vendor configuration write or payment was performed.
+Final integrated verification on 2026-10-21: **109 tests passed**, zero failures/cancellations/skips. Typecheck, optional real-SDK typecheck, all workspace builds, 11-asset browser bundle inspection and the actual combined Chromium/unpacked-extension smoke passed. Focused budget/HTTP/callback tests include real parallel SQLite processes and owner/context checks. Original 22 checkpointed source/document hashes and staged index remain unchanged; no credential file or SDK archive was copied, changed or staged.
 
-Official contracts reviewed: [k-ID session get](https://docs.k-id.com/api/endpoints/get-session), [k-ID permissions](https://docs.k-id.com/concepts/access-features-consent/permissions), [Modulate redaction](https://docs.modulate.ai/get-started/pii), [Inworld synthesis](https://docs.inworld.ai/api-reference/ttsAPI/texttospeech/synthesize-speech), [Inworld voices](https://docs.inworld.ai/api-reference/voiceAPI/voiceservice/list-voices), [Inworld models](https://docs.inworld.ai/tts/tts-models), [FastSpring Sessions](https://developer.fastspring.com/reference/sessions-overview), [FastSpring session creation](https://developer.fastspring.com/reference/createsession), [FastSpring authentication](https://developer.fastspring.com/reference/api-overview). Reading these contracts alone is not live verification.
+Required checks are `npm run typecheck`, `npm test`, `npm run build`, `npm run check:bundles` and `npm run test:smoke`, plus the actual optional SDK typecheck/build when available. Automated provider fixtures are injected simulations. Browser media lifecycle checks cover Send/captions, autoplay denial/manual replay, microphone denial/typed fallback, consent withdrawal and late results across Stop/refresh/setup/playback/navigation; these establish UI behavior, not a real recording or vendor authorization.
 
-Final validation (2026-10-21, Node 22.20.0):
+Remaining manual/live checks include actual toolbar/host grants; browser claim exchange and missing media grants; full voice; real adult playback/redaction quality; genuine jurisdiction difference; actual sandbox order and signed fulfillment; parent approval/saved-method charging; Safari/Android devices. These remain pending. No deployment, extension publication, credential-file write or actual payment was performed. The upstream PR/review status is recorded below.
 
-- `npm ci --offline --no-audit --no-fund`: passed with the supplied optional private SDK. A separate temporary manifest install with `--omit=optional --ignore-scripts` also passed without an SDK archive.
-- `npm run typecheck`: passed. The real optional SDK/widget typecheck and optional companion build also passed; no live widget mount or product declaration was attempted.
-- `npm test`: **84 passed, zero failed/cancelled**. Includes existing P01/P16 regressions, P10 all personas/variants, transactional badge rules/persistence, owned handoff, zero-call purchase denial, simulated adult checkout, strict multipart redaction, speech fallback, permission and cancellation/late-result rejection. All automated provider responses are injected simulations.
-- `npm run build` and `npm run check:bundles`: passed; 11 browser artifacts inspected, no private rubric fields, server entrypoints or provider secret-variable markers. Node SQLite emits an experimental-feature warning on the pinned Node release; build tools also emit benign third-party annotation warnings.
-- `npm run test:smoke`: passed against actual built companion/API and unpacked extension. P01/P16 teaching, P10 evidence, unique badge/replay, consent invalidation, zero-call denied purchase, one-time HTTP handoff, 390px layout, stale-session recovery and Talk/microphone-denial/Stop UI all passed. The voice-ready response for the mic-denial UI check is explicitly simulated; no automated test called vendors. Built content recognition/dismissal was exercised separately from the real toolbar grant.
-- `git diff --check`: passed. Original 22 checkpointed source/document hashes and staged-index hash match the preservation manifest. No credential file was hashed, copied, overwritten or staged. SDK archive, build artifacts and local database remain ignored.
-- One final fetch after validation: team main still `17d69b8f361fafad9d307258ce39110067c85ee3`; fork main still `97675eceedd2c3f722751fd5e81fb5f34106055a`. No newer team snapshot required another merge.
 
-Remaining manual/live checks: actual toolbar/activeTab and local host-grant interaction; full genuine k-ID claim exchange/product mapping; protected application Gemini/voice; real adult capture/playback/retention/redaction-quality checks; genuine jurisdiction difference (the labelled consent transition is tested); eligible sandbox checkout/order completion and signed webhooks; W14 verified parent, approval, policy/monthly ledger and saved-method contracts; real Safari/Android devices. These are not claimed as passed.
+### Verified provider-test text fallback
 
-Final extension review corrected Vite’s discarded script-completion value: the popup now reads a bounded result from Chrome’s isolated content world, clears stale handoff controls and checks that the tab URL is unchanged. The built-artifact browser regression verifies this result channel; the actual positive toolbar grant remains manual.
+After the SDK declaration was denied, the documented secret-key CDK flow independently produced a genuine owned adult session. A real P10 question through the existing authorization boundary and, separately, the actual companion returned validated Gemini text with matching captions. The response advised the usual toll app, saved official address or a number on a genuine statement. No transcript, signature metadata or recording is persisted. The working model setting was preserved.
 
-Pre-PR review added a regression for cached checkout-link delivery: permitted retries refresh authorization and reuse the original checkout, while a subsequent provider revocation rejects the cached link without making another checkout call. Session/version, ownership and cancellation are checked again immediately before returning new or cached checkout output.
+The current local runner supplies these already-confirmed nonsecret settings per process (not by editing the original environment):
+
+```bash
+KID_AI_MAPPING_CONFIRMED=true MODULATE_RETENTION_CONFIRMED=true \
+INWORLD_MODEL_ID=inworld-tts-2 INWORLD_VOICE_ID=Aanya npm run dev
+```
+
+Use that command only with the same reviewed Test Mode product/mapping and confirmed retention. It does not grant missing media permissions. A fresh browser test confirmed voice returned **403 before any microphone request**. To show the verified typed fallback: Susan → consenting adult checkbox → Developer test setup → Start server-owned provider test → Ask using text. The default fictional concern is prefilled. The server’s CDK test preset is an adult test identity, distinct from Susan’s fictional scene age.
+
+The protected route initially rejected a valid documented Gemini `thoughtSignature` metadata field; accepting and discarding that bounded metadata fixed the compatibility failure without relaxing evidence, caption, ownership, permission or cancellation checks. See [the official response metadata documentation](https://ai.google.dev/gemini-api/docs/generate-content/thought-signatures).
+
+The automated offline click-path rehearsal completed in **1.5 seconds** excluding narration, reading and provider operations. The two-minute script above allocates presenter time around that verified path; a spoken 120-second recording and full live-voice rehearsal remain manual.
+
+
+### Recorded integration snapshots
+
+The final fetch found team main `b20ed1ad404e1a91dce50c37bd063c819aff9da8`, the squash merge of [PR #8](https://github.com/jbisaccia-9/one-world-every-age/pull/8). Its source tree matched the recorded `f030b7c` baseline except for the already-preserved vendor ignore rule. The teammate fork merge `bca596637e56ee4542f40405981b0f54bf3fb2e2` was preserved. This increment `0fe858a` adds the two-scene changes; merge `a304b3b` records the actual team snapshot. Fifteen squash-history conflicts were resolved only after each team file was proven identical to the baseline, retaining the tested increment. No independent teammate source change was discarded. Fork main remained `97675eceedd2c3f722751fd5e81fb5f34106055a`. No further moving-main merge is being chased.
+
+The earlier integration is already merged upstream. This new increment requires its own teammate approval and green `guard` before squash merge; agent checks are not teammate approval. The feature branch is the review target, never a direct main push.
+
+
+### Follow-up review handoff
+
+The checked increment was pushed to `Harshvardhan-Garude/one-world-every-age:feat/ozone-demo`; the local secret guard passed. The GitHub connector rejected creation of the follow-up upstream pull request with **403: Resource not accessible by integration**. No new PR or merge is claimed. Open [the prepared comparison](https://github.com/jbisaccia-9/one-world-every-age/compare/main...Harshvardhan-Garude:feat/ozone-demo?expand=1), create the follow-up PR, then obtain the required teammate approval and green `guard` before squash merging. The earlier PR #8 and its upstream merge are already verified; this new increment is separate.

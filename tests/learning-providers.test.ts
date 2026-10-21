@@ -147,6 +147,13 @@ test('Gemini uses documented fixed REST request, untrusted evidence envelope and
   assert.equal(checks, 2); assert.equal(adapter.status().status, 'mock');
 });
 
+test('Gemini accepts documented signature metadata on answer text without exposing it', async () => {
+  const adapter = gemini(async () => Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify(reply()), thoughtSignature: 'opaque-example-signature' }] } }] }));
+  const result = await adapter.explain('Explain this fictional evidence', context());
+  assert.deepEqual(result, reply());
+  assert.doesNotMatch(JSON.stringify(result), /thoughtSignature|opaque-example-signature/);
+});
+
 test('Gemini rejects blocked, truncated, malformed, foreign-evidence, duplicate and caption-mismatch responses', async () => {
   const values = [
     {}, { candidates: [] }, { ...geminiResult(), promptFeedback: { blockReason: 'SAFETY' } },

@@ -9,7 +9,10 @@ const responseSchema = z.object({
   promptFeedback: z.object({ blockReason: z.string().optional() }).optional(),
   candidates: z.array(z.object({
     finishReason: z.literal('STOP'),
-    content: z.object({ parts: z.array(z.object({ text: z.string().min(1), thought: z.boolean().optional() }).strict()).min(1).max(8) }),
+    // Gemini may attach opaque signature metadata to ordinary answer text.
+    // This single-turn adapter validates and discards it; it is never a caption,
+    // stored conversation, permission or instruction. Thought/tool parts still fail.
+    content: z.object({ parts: z.array(z.object({ text: z.string().min(1), thought: z.boolean().optional(), thoughtSignature: z.string().min(1).max(65536).optional() }).strict()).min(1).max(8) }),
     safetyRatings: z.array(z.object({ blocked: z.boolean().optional() })).optional(),
   })).length(1),
 });

@@ -18,7 +18,7 @@ const supportEmail = import.meta.env.VITE_KID_SUPPORT_EMAIL as string | undefine
 // Only features Ozone Layer really has (names from the SDK's PERMISSIONS.md):
 // typed coaching (W06), spoken coaching (W07/W08) and parent-approved purchases (W14).
 // Privacy/terms/icon are left out on purpose, so k-ID keeps its defaults in test mode.
-export const declaredPermissions = [{ name: 'ai-chat' }, { name: 'ai-voice-mode' }, { name: 'ai-media-upload' }, { name: 'ai-media-generation' }, { name: 'ai-memory' }, { name: 'in-game-purchases' }] as const;
+export const declaredPermissions = [{ name: 'ai-chat' }, { name: 'ai-voice-mode' }, { name: 'ai-media-upload' }, { name: 'ai-media-generation' }, { name: 'in-game-purchases' }] as const;
 
 // Resume an in-flight flow on the next launch. Storage can be unavailable (private mode),
 // so every access is guarded; losing these only means the player starts the gate again.

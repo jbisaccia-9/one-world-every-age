@@ -11,6 +11,8 @@ import { speechAdapterFromEnvironment } from './inworld.js';
 import { redactionAdapterFromEnvironment, type RedactionProvider } from './modulate.js';
 import { checkoutAdapterFromEnvironment, type CheckoutProvider } from './fastspring.js';
 import { ProgressStore } from './progress.js';
+import { FamilyBudgetStore } from './family-budget.js';
+import { familyBudgetRequestSchema } from '@beacon/contracts/family-budget';
 
 type Start = z.infer<typeof onboardingRequestSchema>;
 type State = 'local-demo' | 'active' | 'pending' | 'prohibited' | 'unavailable';
@@ -42,14 +44,16 @@ export class BackendService {
   #redaction: RedactionProvider;
   #checkout: CheckoutProvider;
   #progress: ProgressStore;
+  #familyBudget: FamilyBudgetStore;
   #handoffs = new Map<string, { session: StoredSession; assessmentId: string; expiresAt: number }>();
-  constructor(options: { adapter?: PermissionAdapter; reasoning?: ReasoningProvider; speech?: SpeechProvider; redaction?: RedactionProvider; checkout?: CheckoutProvider; progress?: ProgressStore; now?: () => number; lifetimeMs?: number; maxSessions?: number; allowTestAdapter?: boolean } = {}) {
+  constructor(options: { adapter?: PermissionAdapter; reasoning?: ReasoningProvider; speech?: SpeechProvider; redaction?: RedactionProvider; checkout?: CheckoutProvider; progress?: ProgressStore; familyBudget?: FamilyBudgetStore; now?: () => number; lifetimeMs?: number; maxSessions?: number; allowTestAdapter?: boolean } = {}) {
     this.#adapter = options.adapter ?? permissionAdapterFromEnvironment(process.env);
     this.#reasoning = options.reasoning ?? reasoningAdapterFromEnvironment(process.env);
     this.#speech = options.speech ?? speechAdapterFromEnvironment(process.env);
     this.#redaction = options.redaction ?? redactionAdapterFromEnvironment(process.env);
     this.#checkout = options.checkout ?? checkoutAdapterFromEnvironment(process.env);
     this.#progress = options.progress ?? new ProgressStore();
+    this.#familyBudget = options.familyBudget ?? new FamilyBudgetStore(':memory:', { now: options.now });
     if ([this.#adapter, this.#reasoning, this.#speech, this.#redaction, this.#checkout].some(adapter => adapter.transport === 'test-fake') && !options.allowTestAdapter) throw new Error('Injected provider fakes are restricted to explicit automated-test services');
     if (this.#adapter.transport === 'test-fake' && [this.#reasoning, this.#speech, this.#redaction, this.#checkout].some(adapter => adapter.transport === 'vendor-test')) throw new Error('Simulated permissions cannot be combined with real provider transports');
     this.#now = options.now ?? Date.now;
@@ -432,5 +436,28 @@ export class BackendService {
     return purchaseResultSchema.parse(result);
   }
   // Future validated webhook handlers can invalidate a bound reference here. No HTTP webhook is exposed.
-  close() { for (const session of this.#sessions.values()) this.#remove(session); this.#handoffs.clear(); this.#progress.close(); }
+  familyBudget(credential: string) {
+    const session = this.#get(credential);
+    return this.#familyBudget.snapshot(session.ownerId, session.mode);
+  }
+  requestFamilyBudget(credential: string, input: unknown) {
+    const request = familyBudgetRequestSchema.extend({ contextVersion: z.number().int().positive(), assessmentId: z.uuid() }).strict().parse(input);
+    const session = this.#get(credential);
+    this.#version(session, request.contextVersion); this.#owned(session, request.assessmentId);
+    // This ledger is explicitly sample accounting. It never invokes a provider
+    // and cannot supply parent approval or authorize a real purchase.
+    return this.#familyBudget.request(session.ownerId, { itemId: request.itemId, idempotencyKey: request.idempotencyKey }, session.mode);
+  }
+  transitionFamilyBudget(credential: string, purchaseId: string, input: unknown, cancel = false) {
+    const request = z.object({ contextVersion: z.number().int().positive(), ...(cancel ? {} : { outcome: z.enum(['completed', 'failed', 'expired']) }) }).strict().parse(input);
+    const session = this.#get(credential); this.#version(session, request.contextVersion);
+    if (session.mode !== 'local-demo') throw new BackendError(403, 'FORBIDDEN', 'Simulation cannot complete a provider purchase.');
+    return this.#familyBudget.transition(session.ownerId, purchaseId, cancel ? 'cancelled' : request.outcome as 'completed' | 'failed' | 'expired', 'local-demo');
+  }
+  resetFamilyBudget(credential: string, input: unknown) {
+    const request = z.object({ contextVersion: z.number().int().positive() }).strict().parse(input);
+    const session = this.#get(credential); this.#version(session, request.contextVersion);
+    return this.#familyBudget.reset(session.ownerId, session.mode);
+  }
+  close() { for (const session of this.#sessions.values()) this.#remove(session); this.#handoffs.clear(); this.#progress.close(); this.#familyBudget.close(); }
 }
