@@ -430,3 +430,57 @@ footer {
   animation:none!important;
   transition:none!important}
 }
+/* Phones and tablets (iOS Safari, Android Chrome, in-app WebViews).
+   Safe-area insets keep content clear of the notch and home bar; 16px inputs stop iOS
+   zooming on focus; 44px controls meet touch-target guidance; dvh fixes the mobile
+   address-bar height jump. */
+body {
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%}
+input,select,textarea {
+  font-size:max(16px,1em)}
+button,select,.tabs button,.kid-gate button {
+  min-height:44px}
+/* k-ID age gate and notices: the widget fills its container, so size the wrapper. */
+.kid-gate {
+  width:100%;
+  max-width:480px;
+  margin:0 auto;
+  padding:24px 20px;
+  min-height:100vh;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center}
+.app .kid-gate {
+  min-height:auto}
+.kid-notice h1 {
+  font-size:28px;
+  line-height:1.2;
+  margin:0 0 12px}
+.kid-notice button {
+  padding:0 20px;
+  border-radius:12px;
+  border:1px solid #123f37;
+  background:#123f37;
+  color:#fff}
+.kid-features ul {
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:grid;
+  gap:12px}
+.kid-features li p {
+  margin:4px 0 0}
+.kid-off {
+  color:#5b6b66}
+.kid-settings {
+  grid-column:1/-1;
+  max-width:560px}
+@media(max-width:480px) {
+  .kid-gate {
+  padding:16px}
+.kid-notice h1 {
+  font-size:24px}
+}

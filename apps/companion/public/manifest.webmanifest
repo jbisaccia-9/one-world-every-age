@@ -1,0 +1,10 @@
+{
+  "name": "Ozone Layer",
+  "short_name": "Ozone Layer",
+  "description": "Learn to notice online risks and choose a safer next step.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f6ef",
+  "theme_color": "#123f37"
+}

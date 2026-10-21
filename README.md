@@ -96,6 +96,34 @@ No live provider calls, mock production approvals or real-person recordings were
 
 The future chain is Modulate redaction → Gemini reasoning → Inworld speech. Browser grants, backend eligibility, cloud consent and explicit Talk intent remain separate. Voice data rule (reconciled in CONTRIBUTING): a consenting **adult** presenter's live voice turn may be processed in memory as the spec describes, but no recording is ever committed, stored or logged, and no child's or real player's voice is used. This foundation collects no audio.
 
+## k-ID age gate (companion)
+
+The companion opens with k-ID's age-gate widget (`@k-id/core`): it handles jurisdiction, age capture and parental consent, then shows the app. Code: [`apps/companion/src/kid.tsx`](apps/companion/src/kid.tsx).
+
+**Setup on each machine**
+
+1. Get `k-id-core-web.tgz` from a teammate over a private channel and put it in `vendor/`. The SDK is licensed `UNLICENSED`, so it is git-ignored and must never be pushed. `npm ci` fails until the file is there.
+2. Run `npm ci`.
+3. Add to the root `.env` (use the `setkey` helper so values aren't echoed):
+   - `VITE_KID_PUBLISHABLE_KEY`: the `kgp_test_…` publishable key. It's meant for the browser.
+   - `VITE_KID_SUPPORT_EMAIL`: required; k-ID shows it in its emails to parents and players.
+   - `KID_API_KEY`: the **secret** key from Compliance Studio → Developer Settings, for the server. Not the `kgp_` key.
+4. Restart `npm run dev`. Without the browser values, the companion shows a "k-ID isn't set up" screen instead of the gate.
+
+**What it does**
+
+- Declares only features Ozone Layer really has: `ai-chat`, `ai-voice-mode` and `in-game-purchases`. Privacy, terms and icon are left out, so k-ID keeps its defaults in test mode; a live key needs real ones.
+- Saves `sessionId` (and `challengeId` while a parent request is pending) in the browser, so the next launch resumes instead of starting over.
+- Sends the one-time `claimToken` to `POST /api/kid/claim`. k-ID's public docs don't document how a backend redeems it, so the server accepts it without storing or logging it and reports a labeled blocker. Confirm the redemption call with the k-ID mentor (W02).
+- `POST /api/kid/session` reads the session on the server with the secret key (k-ID's documented `GET /api/v1/session/get`) and returns only its age status, jurisdiction and permissions. Status: implemented, unverified against live k-ID.
+- The "Your features" panel uses `<KidPermission>` to show each feature's state, and `<KidSettings>` lets players change permissions (guardian-managed ones ask a grown-up). This only controls what's visible: the backend must still check each capability before doing anything.
+
+**Web, iOS and Android**
+
+- The companion is a responsive web app, tested at phone width (375px) and desktop width, for iOS Safari, Android Chrome and in-app WebViews. It respects the notch and home-bar safe areas, uses 16px inputs so iOS doesn't zoom on focus, has 44px touch targets, uses dynamic viewport height, and ships a web app manifest so it can be added to the home screen.
+- Chrome extensions don't run on Chrome for iOS or Android, so on phones the companion is the experience. A Safari Web Extension for iOS is later scope.
+- k-ID's API supports native iOS (App Attest) and Android (Key Attestation) clients, but this SDK is the web client. Native apps would need k-ID's native integration and are out of this build's scope.
+
 ## Planned next features
 
 - **Parent-approved purchases (W14, [spec 13.1](INTERNET_SAFETY_COMPANION_FUNCTIONAL_SPEC_FINAL.md#131-parent-approved-purchases)).** The adult admin consents through k-ID, saves a card in FastSpring's hosted checkout, and picks a rule: off, approve each request, a monthly limit, and/or notify after each purchase. Approvals use k-ID's purchase-approval flow; charges go to the saved card through FastSpring in test mode. Only Ozone Layer's own catalog can be purchased: FastSpring cannot pay other companies' games or stores, and card data never touches our code.

@@ -28,6 +28,7 @@ secret_patterns=(
   '(AKIA|ASIA)[0-9A-Z]{16}'                   # AWS access key ids
   'xox[baprs]-[A-Za-z0-9-]{10,}'              # Slack
   'AIza[0-9A-Za-z_-]{35}'                     # Google / Firebase API keys
+  'kgp_''(test|live)_[A-Za-z0-9]{20,}'        # k-ID keys (publishable ones too: .env only)
   '-----''BEGIN [A-Z ]*PRIVATE KEY-----'
   'eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}'   # JWTs
   '[a-z][a-z0-9+.-]*://[^/[:space:]:@]+:[^/[:space:]@]{6,}@'  # user:pass inside any URL (https, postgres, mongodb...)

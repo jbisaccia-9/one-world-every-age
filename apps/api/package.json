@@ -9,6 +9,7 @@
   "dependencies": {
     "@beacon/contracts": "0.1.0",
     "@beacon/detection": "0.1.0",
-    "@beacon/fixtures": "0.1.0"
+    "@beacon/fixtures": "0.1.0",
+    "zod": "^4.1.0"
   }
 }

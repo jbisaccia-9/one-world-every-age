@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { demoResponseSchema, providerStatusSchema, type DemoRequest } from '@beacon/contracts';
 import type { z } from 'zod';
+import { KidFeatures, KidRoot } from './kid';
 import './style.css';
 
 type Demo = z.infer<typeof demoResponseSchema>;
@@ -61,8 +62,9 @@ function App() {
         </>}
       </section><aside className="side-column"><section className="lesson"><p className="eyebrow">02 / TRY A DIFFERENT LENS</p><h2>A small moment<br/>to practice.</h2><p>{data?.challenge.question ?? 'Optional clue challenge preview'}</p><fieldset disabled={!data}><legend>Choose an observation</legend>{data?.challenge.choices.map(choice => <label key={choice.id} className="choice"><input type="radio" name="clue" value={choice.id} checked={selected === choice.id} onChange={() => setSelected(choice.id)}/>{choice.text}</label>)}</fieldset><button className="primary" disabled={!selected} onClick={() => setMessage('Choice noted for this preview only. Server grading and mastery awards arrive in W09. No credit was awarded.')}>Preview my choice <span aria-hidden="true">→</span></button><p role="status" className="note">{message || 'Preview only · no grading or mastery credit'}</p></section><section className="voice-note"><h3>Text comes first.</h3><p>Voice is not implemented. Nothing is recording or listening. You can explore every example through text.</p></section></aside></div>
       <section className="status-panel"><div><p className="eyebrow">03 / KNOW WHAT IS AVAILABLE</p><h2>Clear about our capabilities.</h2><p>All protected capabilities are unknown. This local demo cannot authorize production features.</p></div><ul>{providers.map(p => <li key={p.provider}><strong>{p.provider}</strong><span>{p.status}</span></li>)}</ul><details><summary>Inspect demo permission states</summary><ul>{data && Object.entries(data.capabilities.decisions).map(([name, d]) => <li key={name}><span>{name.replaceAll('_', ' ')}</span><span>{d.state} · {d.provenance}</span></li>)}</ul></details></section>
+      <KidFeatures />
       <section className="handoff"><p><strong>Room for every age.</strong> P01/P16 baseline fixtures are ready to explore. The other 16 scenario families remain planned; this is not a completed protection product.</p><button onClick={reset}>Reset demo</button></section>
     </main><footer><span>ozone layer / a thoughtful first step</span><span>Local demo · no provider calls · no stored browsing history</span></footer>
   </div>;
 }
-createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
+createRoot(document.getElementById('root')!).render(<React.StrictMode><KidRoot><App/></KidRoot></React.StrictMode>);

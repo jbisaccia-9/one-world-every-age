@@ -10,6 +10,7 @@
   "dependencies": {
     "@beacon/contracts": "0.1.0",
     "@beacon/fixtures": "0.1.0",
+    "@k-id/core": "file:../../vendor/k-id-core-web.tgz",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   }
