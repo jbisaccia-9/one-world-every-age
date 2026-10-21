@@ -45,3 +45,10 @@ captures/
 
 # Logs
 *.log
+
+# Personal banned-terms list for the pre-push guard — must never ship
+.guard/
+
+# Raw voice/video captures (players' voices are PII). Synthetic clips only,
+# under assets/synthetic/
+recordings/

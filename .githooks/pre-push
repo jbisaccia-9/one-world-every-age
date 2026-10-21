@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Pre-push guard: refuses a push if any commit being pushed adds a secret,
-# a banned file, or a personal machine path — or if this isn't the repo root
-# we expect. Enable once per clone with:  git config core.hooksPath .githooks
+# a banned file, a personal identifier, or a browser-exposed key — or if this
+# isn't the repo root we expect. Enable once per clone with:
+#   git config core.hooksPath .githooks
+# CI runs this same script on every PR (.github/workflows/secret-scan.yml).
 #
 # Git feeds this hook one line per ref on stdin:
 #   <local ref> <local sha> <remote ref> <remote sha>
@@ -9,38 +11,60 @@
 # tree — a working-tree scan misses secrets that were committed then deleted.
 set -euo pipefail
 
-fail() { echo "pre-push guard: BLOCKED — $*" >&2; exit 1; }
+fail() { echo "pre-push guard: BLOCKED — $*" >&2; echo "Remove it, amend/rebase the commit, and push again. If a real key was ever pushed: rotate it first (see CONTRIBUTING.md)." >&2; exit 1; }
 
 # 1. Repo-root check: never push from the home directory or an ancestor.
 top="$(git rev-parse --show-toplevel)"
 [[ "$top" == "$HOME" || "$HOME" == "$top"/* ]] && fail "repo root is $top (home dir or above)"
 
-# Secret patterns (extended regex). Each line is one pattern.
+# Secret patterns (extended regex), one per line. A few are split with ''
+# so this script never matches itself when it's pushed.
 secret_patterns=(
   'gh[opsu]_[A-Za-z0-9]{20,}'                 # GitHub tokens
-  'github_pat_[A-Za-z0-9_]{20,}'
+  'github_''pat_[A-Za-z0-9_]{20,}'
   'sk-ant-[A-Za-z0-9_-]{20,}'                 # Anthropic
   'sk-[A-Za-z0-9_-]{20,}'                     # OpenAI-style
+  '(sk|rk)_live_[A-Za-z0-9]{10,}'             # Stripe-style live keys
   '(AKIA|ASIA)[0-9A-Z]{16}'                   # AWS access key ids
   'xox[baprs]-[A-Za-z0-9-]{10,}'              # Slack
-  'AIza[0-9A-Za-z_-]{35}'                     # Google API keys
-  '-----BEGIN [A-Z ]*PRIVATE KEY-----'
+  'AIza[0-9A-Za-z_-]{35}'                     # Google / Firebase API keys
+  '-----''BEGIN [A-Z ]*PRIVATE KEY-----'
   'eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}'   # JWTs
+  '[a-z][a-z0-9+.-]*://[^/[:space:]:@]+:[^/[:space:]@]{6,}@'  # user:pass inside any URL (https, postgres, mongodb...)
   # KEY=value style assignments with a real-looking value (8+ chars, not a placeholder)
-  '(API_?KEY|SECRET|TOKEN|PASSWORD|PASSWD)[A-Z_]*[[:space:]]*[:=][[:space:]]*["'\'']?[A-Za-z0-9/+_.-]{8,}'
-  '/Users/[A-Za-z0-9._-]+/'                   # personal machine paths
+  '(API_?KEY|SECRET|TOKEN|PASSWORD|PASSWD|AUTH)[A-Z_]*[[:space:]]*[:=][[:space:]]*["'\'']?[A-Za-z0-9/+_.-]{8,}'
+  '/Users/[A-Za-z0-9._-]+/'                   # personal machine paths (macOS)
+  '/home/[a-z][a-z0-9._-]+/'                  # personal machine paths (Linux)
+  '[Cc]:\\Users\\[A-Za-z0-9._-]+'              # personal machine paths (Windows)
 )
-# Values that are obviously placeholders don't count.
-placeholder='(your[_-]|example|placeholder|changeme|xxxx|<[A-Za-z_]+>|\$\{?[A-Z_]+\}?|process\.env|os\.environ|import\.meta\.env)'
+# Front-end env prefixes get bundled into the browser — a key here is public
+# to every player, even when read via import.meta.env / process.env, so this
+# one gets NO placeholder exemption. Keep partner keys (Inworld, Modulate,
+# FastSpring, k-ID) server-side and call them through your own backend.
+browser_key='(NEXT_PUBLIC_|VITE_|REACT_APP_|EXPO_PUBLIC_)[A-Z_]*(SECRET|PRIVATE|API_?KEY|TOKEN|PASSWORD)'
 
-# Files that must never be pushed, whatever they contain.
-banned_files='(^|/)(\.env(\..+)?|[^/]+\.(pem|key|p12|keystore|jks)|service-account[^/]*\.json|credentials[^/]*\.json)$'
-allowed_files='(^|/)\.env\.example$'
+# Lines that are obviously placeholders or env lookups don't count.
+placeholder='(your[_-]|example|placeholder|changeme|replace[_-]?me|xxxx|<[A-Za-z_]+>|\$\{?[A-Z_]+\}?|process\.env|os\.environ|import\.meta\.env|/home/runner/)'
+
+# Files that must never be pushed, whatever they contain. Raw voice/video
+# recordings are banned too: real players' voices are PII (and kids' voices
+# especially). Use synthetic/TTS clips under assets/synthetic/ for demos.
+banned_files='(^|/)(\.env(\..+)?|[^/]+\.(pem|key|p12|pfx|keystore|jks)|service-account[^/]*\.json|credentials[^/]*\.json|google-services\.json|GoogleService-Info\.plist|id_(rsa|ed25519)[^/]*)$'
+banned_media='(^|/)recordings/|\.(wav|m4a|aac|flac|webm|mov)$'
+allowed_files='(^|/)\.env\.example$|(^|/)assets/synthetic/'
+
+# Personal banned terms (your full name, email, employer, street, etc.) live in
+# .guard/banned_patterns.txt — one plain-text term per line, case-insensitive.
+# That file is gitignored ON PURPOSE: the list itself must never ship.
+banned_terms_file="$top/.guard/banned_patterns.txt"
+[[ -f "$banned_terms_file" ]] || echo "pre-push guard: note — no .guard/banned_patterns.txt, personal-term scan skipped (see CONTRIBUTING.md)." >&2
 
 zero='0000000000000000000000000000000000000000'
 while read -r local_ref local_sha remote_ref remote_sha; do
   [[ "$local_sha" == "$zero" ]] && continue            # branch deletion: nothing to scan
-  if [[ "$remote_sha" == "$zero" ]]; then
+  if [[ "${GUARD_SCAN_ALL:-}" == 1 ]]; then
+    range=$(git rev-list "$local_sha")                   # CI first push: scan all history
+  elif [[ "$remote_sha" == "$zero" ]]; then
     range=$(git rev-list "$local_sha" --not --remotes)   # new branch: commits not on any remote
   else
     range=$(git rev-list "$remote_sha..$local_sha")
@@ -49,10 +73,9 @@ while read -r local_ref local_sha remote_ref remote_sha; do
   for c in $range; do
     # Banned file names added or modified in this commit
     while IFS= read -r f; do
-      [[ -z "$f" ]] && continue
-      if [[ "$f" =~ $banned_files && ! "$f" =~ $allowed_files ]]; then
-        fail "commit ${c:0:8} adds banned file: $f"
-      fi
+      [[ -z "$f" || "$f" =~ $allowed_files ]] && continue
+      [[ "$f" =~ $banned_files ]] && fail "commit ${c:0:8} adds banned file: $f"
+      [[ "$f" =~ $banned_media ]] && fail "commit ${c:0:8} adds a raw recording: $f (put synthetic clips in assets/synthetic/)"
     done < <(git diff-tree --no-commit-id --name-only --diff-filter=AM -r "$c")
 
     # Added lines (the '+' side of the diff) plus the commit message
@@ -62,6 +85,16 @@ while read -r local_ref local_sha remote_ref remote_sha; do
       [[ -n "$hits" ]] && fail "commit ${c:0:8} matches secret/PII pattern: $p
 $(printf '%s\n' "$hits" | head -3 | cut -c1-120)"
     done
+    hits=$(printf '%s\n' "$added" | grep -E -e "$browser_key" || true)
+    [[ -n "$hits" ]] && fail "commit ${c:0:8} puts a secret behind a browser-exposed env prefix (every player can read it) — move it server-side:
+$(printf '%s\n' "$hits" | head -3 | cut -c1-120)"
+
+    if [[ -f "$banned_terms_file" ]]; then
+      while IFS= read -r term; do
+        [[ -z "$term" || "$term" == \#* ]] && continue
+        printf '%s\n' "$added" | grep -qiF -e "$term" && fail "commit ${c:0:8} contains a term from your .guard/banned_patterns.txt"
+      done < "$banned_terms_file"
+    fi
   done
 done
 
