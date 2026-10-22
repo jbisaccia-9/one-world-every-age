@@ -135,6 +135,10 @@ test('Gemini uses documented fixed REST request, untrusted evidence envelope and
     assert.equal(new Headers(init?.headers).get('x-goog-api-key'), 'example');
     const body = JSON.parse(String(init?.body));
     assert.match(body.systemInstruction.parts[0].text, /untrusted data/);
+    // Spoken replies must sound natural: no IDs or internal terms read aloud, nothing invented.
+    assert.match(body.systemInstruction.parts[0].text, /Never include IDs, codes or internal terms/);
+    assert.match(body.systemInstruction.parts[0].text, /spokenText must be exactly the same text/);
+    assert.match(body.systemInstruction.parts[0].text, /never add other requests, threats or details/);
     assert.equal(body.generationConfig.responseFormat.text.mimeType, 'APPLICATION_JSON');
     assert.equal(body.generationConfig.responseFormat.text.schema.additionalProperties, false);
     assert.equal(body.tools, undefined);
