@@ -443,17 +443,51 @@ input,select,textarea {
   font-size:max(16px,1em)}
 button,select,.tabs button,.kid-gate button {
   min-height:44px}
-/* k-ID age gate and notices: the widget fills its container, so size the wrapper. */
+/* k-ID age gate. The SDK widget fills its container, so the wrapper sets the size.
+   Desktop: the age check and our notices sit in one centered card (max 560px) on the page.
+   Phones: the same card goes edge to edge. Once the player passes, .kid-pass holds the
+   whole companion, so the wrapper drops all card sizing and the app uses the full width. */
 .kid-gate {
   width:100%;
-  max-width:480px;
-  margin:0 auto;
-  padding:24px 20px;
-  min-height:100vh;
-  min-height:100dvh;
+  min-height:calc(100vh - 120px);
+  min-height:calc(100dvh - 120px);
   display:flex;
   flex-direction:column;
-  justify-content:center}
+  align-items:center;
+  justify-content:center;
+  padding:40px 24px}
+.kid-gate .kid-card,.kid-gate .kid-notice {
+  width:100%;
+  max-width:560px;
+  margin:0 auto;
+  padding:32px 36px;
+  background:#fff;
+  border:1px solid #cad6cf;
+  border-radius:20px;
+  box-shadow:0 8px 30px #173e3514}
+.kid-gate .kid-card .kid-card {
+  max-width:none;
+  padding:0;
+  border:0;
+  box-shadow:none;
+  background:transparent}
+.kid-gate:has(.kid-pass) {
+  display:block;
+  min-height:0;
+  padding:0}
+.kid-pass {
+  width:100%}
+/* Features and settings sit above the app's own layout, so match its centered column. */
+.kid-pass > .kid-features {
+  max-width:1240px;
+  margin:24px auto;
+  padding:0 24px}
+.kid-pass-note {
+  max-width:1240px;
+  margin:12px auto 0;
+  padding:0 24px;
+  color:#5b6b66;
+  font-size:14px}
 .app .kid-gate {
   min-height:auto}
 .kid-notice h1 {
@@ -479,9 +513,14 @@ button,select,.tabs button,.kid-gate button {
 .kid-settings {
   grid-column:1/-1;
   max-width:560px}
-@media(max-width:480px) {
+@media(max-width:600px) {
   .kid-gate {
-  padding:16px}
+  padding:16px;
+  justify-content:flex-start}
+.kid-gate .kid-card,.kid-gate .kid-notice {
+  padding:24px 20px;
+  border-radius:16px;
+  box-shadow:none}
 .kid-notice h1 {
   font-size:24px}
 }

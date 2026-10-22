@@ -65,7 +65,7 @@ export function KidRoot({ children }: { children: ReactNode }) {
           <p>Check your connection, then reload the page.</p>
           <button onClick={() => location.reload()}>Reload</button>
         </Notice></KidAgeGateError>
-        <KidAgeGatePass><p role="status">Widget check completed. Claim redemption is blocked; this result does not grant application permissions.</p><KidFeatures />{children}</KidAgeGatePass>
+        <KidAgeGatePass><div className="kid-pass"><p role="status" className="kid-pass-note">Widget check completed. Claim redemption is blocked; this result does not grant application permissions.</p><KidFeatures />{children}</div></KidAgeGatePass>
       </KidAgeGate></div>
     </KidSessionProvider>
   </KidCoreProvider>;
